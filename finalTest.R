@@ -1,5 +1,8 @@
 library(dplyr)
+library(data.table)
 read_files <- function(){
+  
+  features_file <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/features.txt")
   
   file_subject_test <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/test/subject_test.txt")
   x_test <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/test/X_test.txt")
@@ -7,7 +10,7 @@ read_files <- function(){
   
 
   label_and_subject_test <- cbind(file_subject_test,y_test)
-  colnames(label_and_subject_test) <- c("subject","activity")
+ colnames(label_and_subject_test) <- c("subject","activity")
   
   merged_test_file <- cbind(label_and_subject_test,x_test)
   merged_test_file
@@ -23,11 +26,19 @@ read_files <- function(){
   
   merged_file_trainTest <- rbind(merged_test_file,merged_train_file)
   
-  data_frame_names <- names(merged_train_file)
+  ##data_frame_names <- names(merged_train_file)
   
-  measurement_names_index <- grep("V.+",data_frame_names, perl = TRUE)
+  ##measurement_names_index <- grep("V.+",data_frame_names, perl = TRUE)
   
-  measurement_names <-data_frame_names[measurement_names_index]
-  merged_file_trainTest_average <- mutate(merged_file_trainTest,average = sum(merged_file_trainTest[,2:559]))
-  merged_file_trainTest_average
-}
+  feature_names <- features_file$V2
+  
+  names <- c("subject","activity")
+  names <- append(names,as.character(feature_names))
+  setnames(merged_file_trainTest, old = names(merged_file_trainTest), new = names)
+  
+  merged_file_trainTest
+  merged_file_trainTest <- merged_file_trainTest[ , !duplicated(colnames(merged_file_trainTest))]
+  merged_file_MEAN_SDT <- select(merged_file_trainTest,matches("(subject)|(activity)|(mean|std)"))
+  merged_file_MEAN_SDT
+  
+  }

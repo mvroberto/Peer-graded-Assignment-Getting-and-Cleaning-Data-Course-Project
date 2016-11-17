@@ -38,7 +38,15 @@ read_files <- function(){
   
   merged_file_trainTest
   merged_file_trainTest <- merged_file_trainTest[ , !duplicated(colnames(merged_file_trainTest))]
-  merged_file_MEAN_SDT <- select(merged_file_trainTest,matches("(subject)|(activity)|(mean|std)"))
+  merged_file_MEAN_SDT <- select(merged_file_trainTest,matches("(subject)|(activity)|(mean\\()|(std\\()"))
+  activity_vector <- merged_file_MEAN_SDT$activity
+  activity_vector <- replace(activity_vector, activity_vector== 1, "Walking")
+  activity_vector <- replace(activity_vector, activity_vector== 2, "Walking_Upstairs")
+  activity_vector <- replace(activity_vector, activity_vector== 3, "Walking_Downstairs")
+  activity_vector <- replace(activity_vector, activity_vector== 4, "Sitting")
+  activity_vector <- replace(activity_vector, activity_vector== 5, "Standing")
+  activity_vector <- replace(activity_vector, activity_vector== 6, "Laying")
+  activity_vector
+  merged_file_MEAN_SDT[["Activity_Name"]] <- activity_vector
   merged_file_MEAN_SDT
-  
   }

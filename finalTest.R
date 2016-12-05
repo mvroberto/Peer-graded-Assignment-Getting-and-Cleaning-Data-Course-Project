@@ -49,4 +49,23 @@ read_files <- function(){
   activity_vector
   merged_file_MEAN_SDT[["Activity_Name"]] <- activity_vector
   merged_file_MEAN_SDT
+  
+  to_read_file <- merged_file_MEAN_SDT[,3:68]
+  
+}
+
+
+a <- function(file){
+  library(dplyr)
+  
+  my_list <- list()
+  #file %>% mutate(is.na(.),0) %>% summarise_each(funs(sum))
+  list <- as.list(file)
+  vectors <- as.vector(list)
+  sumed_vector <- vectors[[1]]
+  for(i in ncol(vectors)){
+  sumed_vector <- summed_vector + sumed_vector[[i]]
+  sumed_vector
   }
+  
+}

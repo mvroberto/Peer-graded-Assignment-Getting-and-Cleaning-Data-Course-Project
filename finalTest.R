@@ -1,23 +1,24 @@
 library(dplyr)
+library(plyr)
 library(data.table)
 read_files <- function(){
   
-  features_file <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/features.txt")
+  features_file <- read.table("/Users/mvroberto/Desktop/r/finalExam/UCI\ HAR\ Dataset/features.txt")
   
-  file_subject_test <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/test/subject_test.txt")
-  x_test <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/test/X_test.txt")
-  y_test <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/test/y_test.txt")
+  file_subject_test <- read.table("/Users/mvroberto/Desktop/r/finalExam/UCI\ HAR\ Dataset/test/subject_test.txt")
+  x_test <- read.table("/Users/mvroberto/Desktop/r/finalExam/UCI\ HAR\ Dataset/test/X_test.txt")
+  y_test <- read.table("/Users/mvroberto/Desktop/r/finalExam/UCI\ HAR\ Dataset/test/y_test.txt")
   
-
+  
   label_and_subject_test <- cbind(file_subject_test,y_test)
- colnames(label_and_subject_test) <- c("subject","activity")
+  colnames(label_and_subject_test) <- c("subject","activity")
   
   merged_test_file <- cbind(label_and_subject_test,x_test)
   merged_test_file
   
-  file_subject_train <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/train/subject_train.txt")
-  x_train <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/train/X_train.txt")
-  y_train <- read.table("/Users/robertovallemateos/Desktop/GaT_Coursera/finalTest/UCI\ HAR\ Dataset/train/y_train.txt")
+  file_subject_train <- read.table("/Users/mvroberto/Desktop/r/finalExam/UCI\ HAR\ Dataset/train/subject_train.txt")
+  x_train <- read.table("/Users/mvroberto/Desktop/r/finalExam/UCI\ HAR\ Dataset/train/X_train.txt")
+  y_train <- read.table("/Users/mvroberto/Desktop/r/finalExam/UCI\ HAR\ Dataset/train/y_train.txt")
   
   label_and_subject_train <- cbind(file_subject_train,y_train)
   colnames(label_and_subject_train) <- c("subject","activity")
@@ -48,5 +49,13 @@ read_files <- function(){
   activity_vector <- replace(activity_vector, activity_vector== 6, "Laying")
   activity_vector
   merged_file_MEAN_SDT[["Activity_Name"]] <- activity_vector
-  merged_file_MEAN_SDT
-  }
+  merged_file_MEAN_SDT <- merged_file_MEAN_SDT[,!(names(merged_file_MEAN_SDT) %in% "activity")]
+  
+  to_summarise <- c("subject","Activity_Name")
+
+  data_frame_names <- names(merged_file_MEAN_SDT)
+  subsetted_names <- data_frame_names[2:67]
+  #mutate(merged_file_MEAN_SDT, sum_col = sum(merged_file_MEAN_SDT[,2:67]))
+  data_frame_final <- ddply(merged_file_MEAN_SDT,to_summarise,summarise, average = sum(factors))
+  data_frame_final
+}

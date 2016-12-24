@@ -51,11 +51,26 @@ read_files <- function(){
   merged_file_MEAN_SDT[["Activity_Name"]] <- activity_vector
   merged_file_MEAN_SDT <- merged_file_MEAN_SDT[,!(names(merged_file_MEAN_SDT) %in% "activity")]
   
-  to_summarise <- c("subject","Activity_Name")
+  to_summarise <- c("Subject","Activity_Name")
 
   data_frame_names <- names(merged_file_MEAN_SDT)
   subsetted_names <- data_frame_names[2:67]
-  #mutate(merged_file_MEAN_SDT, sum_col = sum(merged_file_MEAN_SDT[,2:67]))
-  data_frame_final <- ddply(merged_file_MEAN_SDT,to_summarise,summarise, average = sum(factors))
-  data_frame_final
+  subbed_names <- gsub("-","_",subsetted_names)
+  subbed_names_1 <- gsub(")","",subbed_names)
+  subbed_names_2 <- gsub("\\(","",subbed_names_1)
+  
+  names(merged_file_MEAN_SDT) <- c("Subject",subbed_names_2,"Activity_Name")
+  #data_frame_final <- ddply(merged_file_MEAN_SDT,to_summarise, sum)
+  
+  
+  data_names <- select(merged_file_MEAN_SDT,Subject,Activity_Name)
+  data_frame_variables <- select(merged_file_MEAN_SDT,-Subject,-Activity_Name)
+  
+  names_data_frame <- cbind(data_names,data_frame_variables)
+  
+  ### Make Factors ###
+  names_data_frame$Subject <-as.factor(names_data_frame$Subject)
+  names_data_frame$Activity_Name <-as.factor(names_data_frame$Activity_Name)
+  names_data_frame
+  
 }

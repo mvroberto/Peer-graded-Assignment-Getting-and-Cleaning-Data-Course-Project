@@ -10,4 +10,4 @@ run_analysis.R does the follwing:
 4. Organizes the new data frame and changes Subject and Activity variables into factors
 5. Creates a new and tidy data frame grouping Subject, Activity Name and the mean of each variable
 
-The scripts uses two R libraries: dlyr and data.frame
+The scripts uses two R libraries: dplyr and data.frame
